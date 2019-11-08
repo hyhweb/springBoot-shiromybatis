@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.shiromybatis.dao.TTestUserDao">
+
+    <resultMap type="com.springboot.shiromybatis.entity.TTestUser" id="TTestUserMap">
+        <result property="userTestId" column="user_test_id" jdbcType="INTEGER"/>
+               <result property="userId" column="user_id" jdbcType="INTEGER"/>
+               <result property="userOther" column="user_other" jdbcType="VARCHAR"/>
+           </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TTestUserMap">
+        select
+          user_test_id, user_id, user_other
+        from test.t_test_user
+        where user_test_id = #{userTestId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TTestUserMap">
+        select
+          user_test_id, user_id, user_other
+        from test.t_test_user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TTestUserMap">
+        select
+          user_test_id, user_id, user_other
+        from test.t_test_user
+        <where>
+            <if test="userTestId != null">
+                and user_test_id = #{userTestId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="userOther != null and userOther != ''">
+                and user_other = #{userOther}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userTestId" useGeneratedKeys="true">
+        insert into test.t_test_user(user_id, user_other)
+        values (#{userId}, #{userOther})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update test.t_test_user
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="userOther != null and userOther != ''">
+                user_other = #{userOther},
+            </if>
+        </set>
+        where user_test_id = #{userTestId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from test.t_test_user where user_test_id = #{userTestId}
+    </delete>
+
+</mapper>

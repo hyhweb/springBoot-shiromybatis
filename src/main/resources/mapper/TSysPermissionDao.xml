@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.shiromybatis.dao.TSysPermissionDao">
+
+    <resultMap type="com.springboot.shiromybatis.entity.TSysPermission" id="TSysPermissionMap">
+        <result property="permissionId" column="permission_id" jdbcType="INTEGER"/>
+               <result property="permissionName" column="permission_name" jdbcType="VARCHAR"/>
+               <result property="permissionCode" column="permission_code" jdbcType="VARCHAR"/>
+           </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TSysPermissionMap">
+        select
+          permission_id, permission_name, permission_code
+        from test.t_sys_permission
+        where permission_id = #{permissionId}
+    </select>
+
+    <select id="getPermissionByUserName" resultType="com.springboot.shiromybatis.entity.TSysPermission">
+        select * from t_sys_permission p, t_sys_role_permission rp, t_sys_role r,t_sys_user_role ur,t_sys_user u
+        where p.permission_id = rp.permission_id and r.role_id = rp.role_id and r.role_id = ur.role_id and ur.user_id = u.id and u.username = #{userName}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TSysPermissionMap">
+        select
+          permission_id, permission_name, permission_code
+        from test.t_sys_permission
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TSysPermissionMap">
+        select
+          permission_id, permission_name, permission_code
+        from test.t_sys_permission
+        <where>
+            <if test="permissionId != null">
+                and permission_id = #{permissionId}
+            </if>
+            <if test="permissionName != null and permissionName != ''">
+                and permission_name = #{permissionName}
+            </if>
+            <if test="permissionCode != null and permissionCode != ''">
+                and permission_code = #{permissionCode}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="permissionId" useGeneratedKeys="true">
+        insert into test.t_sys_permission(permission_name, permission_code)
+        values (#{permissionName}, #{permissionCode})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update test.t_sys_permission
+        <set>
+            <if test="permissionName != null and permissionName != ''">
+                permission_name = #{permissionName},
+            </if>
+            <if test="permissionCode != null and permissionCode != ''">
+                permission_code = #{permissionCode},
+            </if>
+        </set>
+        where permission_id = #{permissionId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from test.t_sys_permission where permission_id = #{permissionId}
+    </delete>
+
+</mapper>
