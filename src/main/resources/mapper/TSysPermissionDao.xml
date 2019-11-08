@@ -16,9 +16,9 @@
         where permission_id = #{permissionId}
     </select>
 
-    <select id="getPermissionByUserName" resultType="com.springboot.shiromybatis.entity.TSysPermission">
-        select * from t_sys_permission p, t_sys_role_permission rp, t_sys_role r,t_sys_user_role ur,t_sys_user u
-        where p.permission_id = rp.permission_id and r.role_id = rp.role_id and r.role_id = ur.role_id and ur.user_id = u.id and u.username = #{userName}
+    <select id="getPermissionByUserName" resultMap="TSysPermissionMap">
+       select p.permission_id,p.permission_name,p.permission_code from t_sys_permission p, t_sys_role_permission rp,t_sys_user_role ur,t_sys_user u
+        where p.permission_id = rp.permission_id  and rp.role_id = ur.role_id and ur.user_id = u.id and u.username =#{userName}
     </select>
 
     <!--查询指定行数据-->
