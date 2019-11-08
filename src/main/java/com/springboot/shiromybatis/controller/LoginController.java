@@ -17,13 +17,9 @@ public class LoginController {
     public String Login(String username, String password) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        try {
             subject.login(token);
             return "login success";
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return "login fail";
-        }
+
     }
 
     @GetMapping("/dba")
